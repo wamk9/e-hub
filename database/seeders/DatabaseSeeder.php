@@ -14,6 +14,10 @@ class DatabaseSeeder extends Seeder
     {
         $seedersToCall = [
             CreateAdminUserSeeder::class,
+            CreateCurrenciesValuesSeeder::class,
+            CreatePlansValuesSeeder::class,
+            CreateSubCategoriesValuesSeeder::class,
+            CreateCategoriesValuesSeeder::class,
             CreateDemoValuesSeeder::class
         ];
 

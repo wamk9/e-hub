@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\User\Hierarchy;
+use App\Models\User\UserHierarchy;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -49,5 +51,10 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'teams_members', 'member_id')->withPivot(['is_admin']);
+    }
+
+    public function hierarchies()
+    {
+        return $this->belongsToMany(Hierarchy::class, 'users_hierarchies')->withPivot('league_id');
     }
 }

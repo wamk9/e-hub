@@ -47,5 +47,24 @@ class CreateDemoValuesSeeder extends Seeder
         ];
 
         DB::table('teams_members')->insert($data);
+
+        $data = [
+            [
+                'user_id' => '3',
+                'title' => 'Bem-vindo!',
+                'description' => 'Estamos felizes que você chegou!',
+                'route' => '#',
+                'created_at' => now()->toDateString()
+            ],
+            [
+                'user_id' => '3',
+                'title' => 'Inscrição realizada!',
+                'description' => 'Você se inscreveu em um campeonato.',
+                'route' => '#',
+                'created_at' => now()->toDateString()
+            ]
+        ];
+
+        DB::table('notifications')->insert($data);
     }
 }

@@ -3,7 +3,10 @@
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\EHub\LicenseController;
+use App\Http\Controllers\League\LeagueController;
+use App\Models\tournament\TournamentSubscription;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +29,10 @@ Route::controller(AuthController::class)->group(function(){
     Route::post('/auth/login', 'login');
 });
 
+Route::controller(LicenseController::class)->group(function(){
+    Route::get('/license', 'showAvailableLicenses');
+});
+
 
 Route::middleware('auth:sanctum')->group(function() {
     // Route::resource('users', UserController::class);
@@ -34,13 +41,36 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-    Route::get('/notifications', [UserController::class, 'getNotifications']);
+    Route::controller(LicenseController::class)->group(function(){
+        Route::post('/license/adquire', 'adquireLicense')->name('paypal');
+        Route::post('/license/canceled', 'canceledLicensePayment')->name('paypal.payment.canceled');
+        Route::post('/license/success', 'adquiredLicense')->name('paypal.payment.successful');
+    });
+
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/notification', 'getNotifications');
+        Route::patch('/notification/{id}', 'setNotificationRead');
+        Route::delete('/notification/{id}', 'deleteNotification');
+    });
+
+    Route::controller(LeagueController::class)->group(function(){
+        Route::post('/league', 'create');
+        Route::patch('/league/{id}', 'update');
+        Route::delete('/league/{id}', 'delete');
+    });
+
+    // Tournaments (Subscriptions, Add, Edit, Delete...)
+    Route::post('/tournament/{id}/subscription', [TournamentSubscription::class, 'logout']);
+
+    Route::controller(CategoryController::class)->group(function(){
+        Route::get('/category', 'showCategories');
+    });
 
     Route::controller(TeamController::class)->group(function(){
-        Route::get('/my-teams', 'showMyTeams');
-        Route::post('/my-teams/create', 'create');
-        Route::get('/my-teams/{id}', 'showMyTeams');
-        Route::patch('/my-teams/{id}', 'update');
+        Route::get('/my-team', 'showMyTeams');
+        Route::post('/my-team/create', 'create');
+        Route::get('/my-team/{id}', 'showMyTeams');
+        Route::patch('/my-team/{id}', 'update');
     });
 });
 

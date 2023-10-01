@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('teams_members', function (Blueprint $table) {
-            $table->integer('team_id')->unsigned();
-            $table->integer('member_id')->unsigned();
+            $table->BigInteger('team_id')->unsigned();
+            $table->BigInteger('member_id')->unsigned();
             $table->boolean('is_admin', false);
 
             $table->primary(['team_id','member_id']);
-            $table->foreign('team_id')->references('id')->on('team');
-            $table->foreign('member_id')->references('id')->on('user');
+            $table->foreign('team_id')->references('id')->on('teams');
+            $table->foreign('member_id')->references('id')->on('users');
         });
     }
 

@@ -27,14 +27,21 @@ class TeamController extends Controller
 
         if ($request->route('id'))
         {
+            $isTeamMember = false;
+
             $teams = Team::find($request->route('id'));
             $teams['members'] = $teams->members;
 
             for ($i = 0; $i < count($teams['members']); $i++)
             {
+                $isTeamMember = auth()->user()->id == $teams['members'][$i]['id'] ? true : $isTeamMember;
+
                 $teams['members'][$i]['is_admin'] = $teams['members'][$i]->pivot->is_admin == 1 ? true : false;
                 $teams['members'][$i] = $teams['members'][$i]->makeHidden('pivot');
             }
+
+            if (!$isTeamMember)
+                return response()->json(['message' => 'Unauthorized', 'status' => false], 401);
         }
         else
         {
@@ -49,38 +56,7 @@ class TeamController extends Controller
             $teams = $teams->makeHidden('pivot');
         }
 
-        return response()->json($teams, 200);
-    }
-
-    public function read(Request $request)
-    {
-        if (!Auth::check())
-            return response()->json(['message' => 'Unauthorized', 'status' => false], 401);
-
-        $teams = User::all()->members;
-
-        for ($i = 0; $i < count($teams); $i++)
-            $teams[$i]['is_admin'] = $teams[$i]->pivot->is_admin == 1 ? true : false;
-
-        $teams = $teams->makeHidden('pivot');
-
-        //$teams['teste'] = $teams->is_admin;
-
-
-        return response()->json($teams, 200);
-
-
-
-        $where = [
-            [ 'member_id', '=', auth()->user()->id ]
-        ];
-
-        if ($request->route('id'))
-            array_push($where, ['id', '=', $request->route('id')]);
-
-        $myTeam = Team::where($where);
-
-        return response()->json($team->members, 200);
+        return response()->json(['message' => $teams, 'status' => true], 200);
     }
 
     public function update(Request $request)
@@ -93,11 +69,11 @@ class TeamController extends Controller
             $data['image'] = $request->image;
 
         if(!$myTeam->count())
-            return response()->json(['message' => 'not found'], 404);
+            return response()->json(['message' => 'not found', 'status' => false], 404);
 
         if ($data)
             $myTeam->update($data);
 
-        return response()->json($data, 200);
+        return response()->json(['message' => 'Team '.$data['name'].' updated' , 'status' => true], 200);
     }
 }
