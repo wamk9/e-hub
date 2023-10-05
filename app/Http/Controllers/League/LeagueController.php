@@ -188,4 +188,22 @@ class LeagueController extends Controller
 
     }
 
+    public function show(Request $request)
+    {
+        if (!Auth::check())
+            return response()->json(['message' => 'Unauthorized', 'status' => false], 401);
+
+        if ($request->route('id'))
+        {
+            $league = League::find($request->route('id'));
+        }
+        else
+        {
+            $league = League::all();
+        }
+
+
+        return response()->json(['message' => $league], 200);
+
+    }
 }

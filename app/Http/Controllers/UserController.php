@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function getToken(Request $request)
+    {
+        return response()->json(['message' => auth()->user()->tokens->first(), 'status' => true], 200);
+    }
+
     public function getNotifications()
     {
         if (!Auth::check())

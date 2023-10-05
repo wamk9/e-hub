@@ -51,12 +51,15 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/notification', 'getNotifications');
         Route::patch('/notification/{id}', 'setNotificationRead');
         Route::delete('/notification/{id}', 'deleteNotification');
+
+        Route::get('/user/token', 'getToken');
     });
 
     Route::controller(LeagueController::class)->group(function(){
         Route::post('/league', 'create');
         Route::patch('/league/{id}', 'update');
         Route::delete('/league/{id}', 'delete');
+        Route::get('/league', 'show');
     });
 
     // Tournaments (Subscriptions, Add, Edit, Delete...)
