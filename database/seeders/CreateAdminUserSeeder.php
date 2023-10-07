@@ -16,7 +16,6 @@ class CreateAdminUserSeeder extends Seeder
     public function run()
     {
         $data = [
-            'username' => env('SUPPORT_USER'),
             'name' => env('SUPPORT_NAME'),
             'email' => env('SUPPORT_MAIL'),
             'steam_id' => env('SUPPORT_STEAMID'),

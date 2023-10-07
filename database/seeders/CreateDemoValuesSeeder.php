@@ -16,14 +16,12 @@ class CreateDemoValuesSeeder extends Seeder
     {
         $data = [
             [
-                'username' => 'admin_demo',
                 'name' => 'Administrator',
                 'email' => 'admin@demo.com.br',
                 'steam_id' => '00000000000000001',
                 'password' => Hash::make('123456')
             ],
             [
-                'username' => 'demo',
                 'name' => 'Usuário Demonstração',
                 'email' => 'user@demo.com.br',
                 'steam_id' => '00000000000000002',
