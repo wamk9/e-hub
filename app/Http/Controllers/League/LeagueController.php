@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
+
 use Throwable;
 
 class LeagueController extends Controller
@@ -32,10 +34,7 @@ class LeagueController extends Controller
       ]);
 
       if($validateLeague->fails()){
-        return response()->json([
-            'message' => 'validation error',
-            'errors' => $validateLeague->errors()
-        ], 401);
+        throw ValidationException::withMessages($validateLeague->messages()->all());
       }
 
       $league = new League($request->only($dataToGet));
