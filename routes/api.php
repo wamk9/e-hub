@@ -3,6 +3,7 @@
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Tournament\TournamentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\EHub\LicenseController;
 use App\Http\Controllers\League\LeagueController;
@@ -33,6 +34,11 @@ Route::controller(LicenseController::class)->group(function(){
     Route::get('/license', 'showAvailableLicenses');
 });
 
+Route::controller(TournamentController::class)->group(function(){
+    Route::get('/league/{leagueRoute}', 'show');
+    Route::post('/league/{leagueRoute}/tournament', 'create');
+    Route::get('/league/{leagueRoute}/tournament/{tournamentRoute}', 'show');
+});
 
 Route::middleware('auth:sanctum')->group(function() {
     // Route::resource('users', UserController::class);

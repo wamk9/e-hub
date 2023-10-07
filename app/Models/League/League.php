@@ -12,6 +12,7 @@ class League extends Model
     protected $fillable = [
         'logo_image',
         'name',
+        'route',
         'description'
     ];
 

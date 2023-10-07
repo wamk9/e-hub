@@ -14,6 +14,7 @@ class Tournament extends Model
     protected $fillable = [
         'name',
         'description',
+        'route',
         'price',
         'subscription_limit',
         'banner_image',

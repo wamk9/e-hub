@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->binary('logo_image')->nullable();
             $table->string('name')->unique();
+            $table->string('route')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
         });
