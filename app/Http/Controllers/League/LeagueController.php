@@ -26,6 +26,18 @@ class LeagueController extends Controller
         'logo_image'
       ];
 
+      $validateLeague = Validator::make($request->only($dataToGet), [
+          'name' => 'required',
+          'route' => 'required'
+      ]);
+
+      if($validateLeague->fails()){
+        return response()->json([
+            'message' => 'validation error',
+            'errors' => $validateLeague->errors()
+        ], 401);
+      }
+
       $league = new League($request->only($dataToGet));
 
       if (League::where('name', $league->name)->first())
