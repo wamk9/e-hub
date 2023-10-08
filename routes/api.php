@@ -35,9 +35,12 @@ Route::controller(LicenseController::class)->group(function(){
 });
 
 Route::controller(TournamentController::class)->group(function(){
-    Route::get('/league/{leagueRoute}', 'show');
     Route::post('/league/{leagueRoute}/tournament', 'create');
     Route::get('/league/{leagueRoute}/tournament/{tournamentRoute}', 'show');
+});
+
+Route::controller(LeagueController::class)->group(function(){
+    Route::get('/league/{leagueRoute}', 'show');
 });
 
 Route::middleware('auth:sanctum')->group(function() {
