@@ -209,23 +209,45 @@ class LeagueController extends Controller
         return response()->json(['message' => 'League deleted'], 200);
     }
 
-  public function show(Request $request)
-  {
-    if ($request->route('leagueRoute'))
+    public function show(Request $request)
     {
-       $league = League::where('route', $request->route('leagueRoute'))->first();
+        if ($request->route('leagueRoute'))
+        {
+            $league = League::where('route', $request->route('leagueRoute'))->first();
+
+            if ($request->user('sanctum'))
+            {
+                $user = User::where('id', $request->user('sanctum')->id)->first();
+                $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $league->id);
+
+                $configHierarchy = [];
+
+                foreach ($userHierarchiesOnLeague as $hierarchy)
+                {
+                    $hierarchy = Hierarchy::where('id', $hierarchy->pivot->hierarchy_id)->first();
+
+                    foreach (json_decode(json_encode($hierarchy->config), true) as $key => $value) {
+                        if (!array_key_exists($key, $configHierarchy))
+                            $configHierarchy[$key] = $value == 1 ? true : false;
+                        else
+                            $configHierarchy[$key] = $value == 1 ? true : $configHierarchy[$key];
+                    }
+                }
+
+                $league["configHierarchy"] = $configHierarchy;
+            }
+
+            if ($league)
+                return response()->json(['message' => $league], 200);
+        }
+        else
+        {
+        $league = League::all();
 
         if ($league)
             return response()->json(['message' => $league], 200);
-    }
-    else
-    {
-      $league = League::all();
+        }
 
-      if ($league)
-        return response()->json(['message' => $league], 200);
+        return response()->json(['message' => "League not found."], 404);
     }
-
-    return response()->json(['message' => "League not found."], 404);
-  }
 }
