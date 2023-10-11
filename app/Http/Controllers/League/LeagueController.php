@@ -220,6 +220,8 @@ class LeagueController extends Controller
                 $user = User::where('id', $request->user('sanctum')->id)->first();
                 $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $league->id);
 
+                $hierarchies = [];
+
                 $configHierarchy = [];
 
                 foreach ($userHierarchiesOnLeague as $hierarchy)
@@ -234,7 +236,8 @@ class LeagueController extends Controller
                     }
                 }
 
-                $league["config_hierarchy"] = $configHierarchy;
+                $hierarchies["config"] = $configHierarchy;
+                $league["hierarchies"] = $hierarchies;
             }
 
             if ($league)
