@@ -234,7 +234,7 @@ class LeagueController extends Controller
                     }
                 }
 
-                $league["configHierarchy"] = $configHierarchy;
+                $league["config_hierarchy"] = $configHierarchy;
             }
 
             if ($league)
