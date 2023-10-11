@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('leagues', function (Blueprint $table) {
             $table->id();
-            $table->binary('logo_image')->nullable();
             $table->string('name')->unique();
             $table->string('route')->unique();
             $table->text('description')->nullable();
