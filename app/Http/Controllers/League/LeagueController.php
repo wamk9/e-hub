@@ -53,7 +53,7 @@ class LeagueController extends Controller
                 if(!File::isDirectory($path))
                     File::makeDirectory($path, 0755, true, true);
 
-                Image::make($request->only('logo_image')['logo_image'])->encode('webp', 90)->resize(250, 250)->save($path.'/logo.webp');
+                Image::make($request->only('logo_image')['logo_image'])->encode('webp', 90)->resize(250, 250, function($constraint) { $constraint->aspectRatio(); })->save($path.'/logo.webp');
             }
 
             $league->save();
@@ -181,7 +181,7 @@ class LeagueController extends Controller
                 if(!File::isDirectory($path))
                     File::makeDirectory($path, 0755, true, true);
 
-                Image::make($request->only('logo_image')['logo_image'])->encode('webp', 90)->resize(250, 250)->save($path.'/logo.webp');
+                Image::make($request->only('logo_image')['logo_image'])->encode('webp', 90)->resize(250, 250, function($constraint) { $constraint->aspectRatio(); })->save($path.'/logo.webp');
             }
         });
 
