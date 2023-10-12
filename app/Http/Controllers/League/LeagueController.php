@@ -128,7 +128,7 @@ class LeagueController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = User::where('id', auth()->user()->id)->first();
+        $user = User::where('id', $request->user('sanctum')->id)->first();
 
         $league = League::where('route', $request->route('leagueRoute'))->first();
 
