@@ -174,7 +174,7 @@ class LeagueController extends Controller
 
             $league->update($updatedData);
 
-            if ($request->only('logo_image')['logo_image'])
+            if ($request->filled('logo_image'))
             {
                 $path = storage_path('app/public/league/'.$league->route);
 
