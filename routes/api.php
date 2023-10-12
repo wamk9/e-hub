@@ -66,8 +66,8 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::controller(LeagueController::class)->group(function(){
         Route::post('/league', 'create');
-        Route::patch('/league/{id}', 'update');
-        Route::delete('/league/{id}', 'delete');
+        Route::patch('/league/{leagueRoute}/profile', 'updateProfile');
+        Route::delete('/league/{leagueRoute}', 'delete');
         Route::get('/league', 'show');
     });
 

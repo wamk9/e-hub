@@ -126,10 +126,13 @@ class LeagueController extends Controller
         return response()->json(['message' => 'League saved'], 200);
     }
 
-    public function update(Request $request)
+    public function updateProfile(Request $request)
     {
         $user = User::where('id', auth()->user()->id)->first();
-        $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $request->route('id'));
+
+        $league = League::where('route', $request->route('leagueRoute'))->first();
+
+        $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $league->id);
 
         if (!count($userHierarchiesOnLeague))
         throw ValidationException::withMessages(['message' => 'User don\'t present in this league']);
@@ -148,17 +151,13 @@ class LeagueController extends Controller
         }
 
         if (!$canEditLeagueInfo)
-        return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
 
-        DB::transaction(function () use ($request){
-            $league = League::where('id', $request->route('id'))->first();
-
+        DB::transaction(function () use ($request, $league){
             $requestData = $request->only(
                 [
-                'name',
-                'description',
-                'route',
-                'logo_image'
+                    'name',
+                    'description',
                 ]
             );
 
@@ -166,7 +165,7 @@ class LeagueController extends Controller
             foreach($league->toArray() as $key => $actualInfo)
             {
                 if (array_key_exists($key, $requestData) && ($actualInfo != $requestData[$key]))
-                $updatedData[$key] = $requestData[$key];
+                    $updatedData[$key] = $requestData[$key];
             }
 
 
@@ -174,6 +173,16 @@ class LeagueController extends Controller
                 throw ValidationException::withMessages(['message' => 'League name in use']);
 
             $league->update($updatedData);
+
+            if ($request->only('logo_image')['logo_image'])
+            {
+                $path = storage_path('app/public/league/'.$league->route);
+
+                if(!File::isDirectory($path))
+                    File::makeDirectory($path, 0755, true, true);
+
+                Image::make($request->only('logo_image')['logo_image'])->encode('webp', 90)->resize(250, 250)->save($path.'/logo.webp');
+            }
         });
 
         return response()->json(['message' => 'League information updated'], 200);
@@ -215,13 +224,12 @@ class LeagueController extends Controller
         {
             $league = League::where('route', $request->route('leagueRoute'))->first();
 
-            if ($request->user('sanctum'))
+            if ($request->user('sanctum') && $league)
             {
                 $user = User::where('id', $request->user('sanctum')->id)->first();
                 $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $league->id);
 
                 $hierarchies = [];
-
                 $configHierarchy = [];
 
                 foreach ($userHierarchiesOnLeague as $hierarchy)
@@ -238,17 +246,16 @@ class LeagueController extends Controller
 
                 $hierarchies["config"] = $configHierarchy;
                 $league["hierarchies"] = $hierarchies;
-            }
 
-            if ($league)
                 return response()->json(['message' => $league], 200);
+            }
         }
         else
         {
-        $league = League::all();
+            $league = League::all();
 
-        if ($league)
-            return response()->json(['message' => $league], 200);
+            if ($league)
+                return response()->json(['message' => $league], 200);
         }
 
         return response()->json(['message' => "League not found."], 404);
