@@ -16,8 +16,12 @@ return new class extends Migration
             $table->bigInteger('league_id')->unsigned();
             $table->bigInteger('hierarchy_id')->unsigned();
 
-            $table->boolean('edit_league_info')->default(false);
+            $table->boolean('create_league_tournaments')->default(false);
+            $table->boolean('delete_league_tournaments')->default(false);
             $table->boolean('edit_league_hierarchies')->default(false);
+            $table->boolean('edit_league_info')->default(false);
+            $table->boolean('edit_league_protests')->default(false);
+            $table->boolean('edit_league_tournaments')->default(false);
             $table->boolean('view_menu')->default(false);
 
             $table->foreign('league_id')->references('league_id')->on('hierarchies')->cascadeOnUpdate()->cascadeOnDelete();

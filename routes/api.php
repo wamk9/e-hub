@@ -7,7 +7,8 @@ use App\Http\Controllers\Tournament\TournamentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\EHub\LicenseController;
 use App\Http\Controllers\League\LeagueController;
-use App\Models\tournament\TournamentSubscription;
+use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Tournament\PointEventController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +44,10 @@ Route::controller(LeagueController::class)->group(function(){
     Route::get('/league/{leagueRoute}', 'show');
 });
 
+Route::controller(CategoryController::class)->group(function(){
+    Route::get('/categories', 'show');
+});
+
 Route::middleware('auth:sanctum')->group(function() {
     // Route::resource('users', UserController::class);
     // Route::resource('teams', TeamController::class);
@@ -71,11 +76,22 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::get('/league', 'show');
     });
 
-    // Tournaments (Subscriptions, Add, Edit, Delete...)
-    Route::post('/tournament/{id}/subscription', [TournamentSubscription::class, 'logout']);
+    Route::controller(PaymentController::class)->group(function(){
+        Route::get('/payment-status', 'showAvailableStatus');
+        Route::get('/currency', 'showAvailableCurrencies');
+        Route::patch('/league/{leagueRoute}/tournament/{tournamentRoute}/participant/payment', 'updateProfile');
+    });
 
-    Route::controller(CategoryController::class)->group(function(){
-        Route::get('/category', 'showCategories');
+    Route::controller(TournamentController::class)->group(function(){
+        Route::post('/league/{leagueRoute}/tournament', 'create');
+        Route::patch('/league/{leagueRoute}/tournament/{tournamentRoute}', 'updateProfile');
+        Route::post('/league/{leagueRoute}/tournament/{tournamentRoute}/participant/subscribe', '');
+    });
+
+    Route::controller(PointEventController::class)->group(function(){
+        Route::post('/league/{leagueRoute}/tournament/{tournamentRoute}/event', 'create');
+        Route::get('/league/{leagueRoute}/tournament/{tournamentRoute}/event/{eventRoute}', 'show');
+        Route::post('/league/{leagueRoute}/tournament/{tournamentRoute}/event/{eventRoute}/round', 'createRound');
     });
 
     Route::controller(TeamController::class)->group(function(){

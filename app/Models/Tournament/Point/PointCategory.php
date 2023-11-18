@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Models\Payment;
+namespace App\Models\Tournament\Point;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentStatus extends Model
+class PointCategory extends Model
 {
     public $timestamps = false;
 
-    protected $table = 'payments_status';
+    protected $table = 'point_categories';
 
     protected $fillable = [
-        'name'
+        'name',
+        'description',
+        'type'
     ];
 
     protected $hidden = [

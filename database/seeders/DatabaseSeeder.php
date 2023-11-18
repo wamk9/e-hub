@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
             CreateAdminUserSeeder::class,
             CreateCurrenciesValuesSeeder::class,
             CreatePlansValuesSeeder::class,
-            CreateSubCategoriesValuesSeeder::class,
             CreateCategoriesValuesSeeder::class,
+            CreateSubCategoriesValuesSeeder::class,
             CreateDemoValuesSeeder::class
         ];
 

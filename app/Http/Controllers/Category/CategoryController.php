@@ -9,20 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
-    public function showCategories()
+    public function show()
     {
-        if (!Auth::check())
-            return response()->json(['message' => 'Unauthorized', 'status' => false], 401);
-
-        // Need initialize because array_push function
+        // Need initialize because we need push info to array
         $categories = [];
 
         foreach (Category::all() as $category)
         {
-            $category['subcategory'] = $category->subcategory;
-            array_push($categories, $category);
+            $category['subcategories'] = $category->subcategories;
+            $categories[] = $category;
         }
 
-        return response()->json(['message' => $categories, 'status' => true], 200);
+        return response()->json(['message' => $categories], 200);
     }
 }

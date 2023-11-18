@@ -15,10 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->binary('image')->nullable();
-            $table->bigInteger('subcategory_id')->unsigned();
-
-            $table->foreign('subcategory_id')->references('id')->on('subcategories')->restrictOnDelete()->cascadeOnUpdate();
+            $table->string('route')->unique();
         });
     }
 

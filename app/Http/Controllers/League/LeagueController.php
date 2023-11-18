@@ -65,9 +65,13 @@ class LeagueController extends Controller
                 'editable' => false,
                 'league_id' => $league->id,
                 'config' => [
-                    'edit_league_info' => 1,
+                    'create_league_tournaments' => 1,
+                    'delete_league_tournaments' => 1,
                     'edit_league_hierarchies' => 1,
-                    'view_menu' => 1,
+                    'edit_league_info' => 1,
+                    'edit_league_protests' => 1,
+                    'edit_league_tournaments' => 1,
+                    'view_menu' => 1
                 ],
                 ],
                 [
@@ -162,11 +166,10 @@ class LeagueController extends Controller
             );
 
             $updatedData = [];
+
             foreach($league->toArray() as $key => $actualInfo)
-            {
                 if (array_key_exists($key, $requestData) && ($actualInfo != $requestData[$key]))
                     $updatedData[$key] = $requestData[$key];
-            }
 
 
             if (array_key_exists('name', $updatedData) && count(League::where([['name', '=', $updatedData['name']], ['id', '!=', $league->id]])->get()->toArray()) > 0)
@@ -224,31 +227,36 @@ class LeagueController extends Controller
         {
             $league = League::where('route', $request->route('leagueRoute'))->first();
 
-            if ($request->user('sanctum') && $league)
+            if ($league)
             {
-                $user = User::where('id', $request->user('sanctum')->id)->first();
-                $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $league->id);
-
-                $hierarchies = [];
-                $configHierarchy = [];
-
-                foreach ($userHierarchiesOnLeague as $hierarchy)
+                if ($request->user('sanctum'))
                 {
-                    $hierarchy = Hierarchy::where('id', $hierarchy->pivot->hierarchy_id)->first();
+                    $user = User::where('id', $request->user('sanctum')->id)->first();
+                    $userHierarchiesOnLeague = $user->hierarchies->where('league_id', $league->id);
 
-                    foreach (json_decode(json_encode($hierarchy->config), true) as $key => $value) {
-                        if (!array_key_exists($key, $configHierarchy))
-                            $configHierarchy[$key] = $value == 1 ? true : false;
-                        else
-                            $configHierarchy[$key] = $value == 1 ? true : $configHierarchy[$key];
+                    $hierarchies = [];
+                    $configHierarchy = [];
+
+                    foreach ($userHierarchiesOnLeague as $hierarchy)
+                    {
+                        $hierarchy = Hierarchy::where('id', $hierarchy->pivot->hierarchy_id)->first();
+
+                        foreach (json_decode(json_encode($hierarchy->config), true) as $key => $value) {
+                            if (!array_key_exists($key, $configHierarchy))
+                                $configHierarchy[$key] = $value == 1 ? true : false;
+                            else
+                                $configHierarchy[$key] = $value == 1 ? true : $configHierarchy[$key];
+                        }
                     }
-                }
 
-                $hierarchies["config"] = $configHierarchy;
-                $league["hierarchies"] = $hierarchies;
+                    $hierarchies["config"] = $configHierarchy;
+                    $league["hierarchies"] = $hierarchies;
+                }
 
                 return response()->json(['message' => $league], 200);
             }
+
+
         }
         else
         {

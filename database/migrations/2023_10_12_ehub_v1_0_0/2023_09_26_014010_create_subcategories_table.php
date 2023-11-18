@@ -11,25 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tournaments', function (Blueprint $table) {
+        Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->string('route');
-            $table->float('price')->default(0);
-            $table->integer('subscription_limit')->default(0);
-            $table->binary('banner_image')->nullable();
-            $table->binary('logo_image')->nullable();
-
+            $table->string('route')->unique();
             $table->bigInteger('category_id')->unsigned();
-            $table->bigInteger('league_id')->unsigned();
 
             $table->foreign('category_id')->references('id')->on('categories')->restrictOnDelete()->cascadeOnUpdate();
-            $table->foreign('league_id')->references('id')->on('leagues')->cascadeOnDelete()->cascadeOnUpdate();
 
-            $table->timestamps();
         });
-
     }
 
     /**
@@ -37,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tournaments');
+        Schema::dropIfExists('subcategories');
     }
 };

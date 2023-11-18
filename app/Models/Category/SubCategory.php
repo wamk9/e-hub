@@ -13,11 +13,12 @@ class SubCategory extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'route'
     ];
 
     protected $hidden = [
-        'subcategory_id'
+        'category_id'
     ];
 
     use HasFactory;

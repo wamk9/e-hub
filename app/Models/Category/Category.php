@@ -13,18 +13,13 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
-        'image'
+        'route'
     ];
 
     use HasFactory;
 
-    /**
-     * Get the subcategory that owns the Category
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function subcategory(): BelongsTo
+    public function subcategories()
     {
-        return $this->belongsTo(SubCategory::class, 'category_id')->select(['name']);
+        return $this->hasMany(SubCategory::class, 'category_id');
     }
 }

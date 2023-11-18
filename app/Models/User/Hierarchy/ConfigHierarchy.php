@@ -14,8 +14,12 @@ class ConfigHierarchy extends Model
     protected $fillable = [
         'hierarchy_id',
         'league_id',
-        'edit_league_info',
+        'create_league_tournaments',
+        'delete_league_tournaments',
         'edit_league_hierarchies',
+        'edit_league_info',
+        'edit_league_protests',
+        'edit_league_tournaments',
         'view_menu'
     ];
 

@@ -15,21 +15,25 @@ class CreateSubCategoriesValuesSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'IRL',
-                'description' => 'Buscando eventos no mundo real? O lugar é aqui!',
+                'name' => 'Kart',
+                'route' => 'kart',
+                'category_id' => 1,
             ],
             [
-                'name' => 'PC',
-                'description' => 'Competições para aqueles que são do time \'PC Master Race!\'',
+                'name' => 'Assetto Corsa: Competizione',
+                'route' => 'acc',
+                'category_id' => 2,
             ],
             [
-                'name' => 'PlayStation',
-                'description' => 'Aqui você encontrará competições específicas para jogos de PlayStation!',
+                'name' => 'F1 2023',
+                'route' => 'f1-2023',
+                'category_id' => 3,
             ],
             [
-                'name' => 'Xbox',
-                'description' => 'Aqui você encontrará competições específicas para jogos de Xbox!',
-            ],
+                'name' => 'Forza Motorsport',
+                'route' => 'forza-motorsport',
+                'category_id' => 4,
+            ]
         ];
 
         DB::table('subcategories')->insert($data);
